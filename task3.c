@@ -1,20 +1,28 @@
 #include <stdio.h>
+
 #include <stdlib.h>
+
 #include <string.h>
+
 #include <unistd.h>
+
 #include <sys/types.h>
+
 #include <sys/wait.h>
 
 #define MAX_COMMAND_LENGTH 100
 
-char *get_command_path(char *command, char **path_directories);
+char * get_command_path(char * command, char ** path_directories);
 
-int main()
-{
-    char *command = "ls";
-    char *path_directories[] = {"/usr/bin", "/bin", NULL};
+int main() {
+    char * command = "ls";
+    char * path_directories[] = {
+        "/usr/bin",
+        "/bin",
+        NULL
+    };
 
-    char *command_path;
+    char * command_path;
     pid_t pid;
 
     command_path = get_command_path(command, path_directories);
@@ -27,7 +35,7 @@ int main()
     pid = fork();
     if (pid == 0) {
         /* Child process */
-        char **args = (char **)malloc(sizeof(char *) * 2);
+        char ** args = (char ** ) malloc(sizeof(char * ) * 2);
         args[0] = command;
         args[1] = NULL;
         execv(command_path, args);
@@ -48,14 +56,13 @@ int main()
     return (0);
 }
 
-char *get_command_path(char *command, char **path_directories)
-{
+char * get_command_path(char * command, char ** path_directories) {
     int i = 0;
-    char *command_path = malloc(MAX_COMMAND_LENGTH);
+    char * command_path = malloc(MAX_COMMAND_LENGTH);
 
     while (path_directories[i] != NULL) {
         snprintf(command_path, MAX_COMMAND_LENGTH, "%s/%s",
-                 path_directories[i], command);
+            path_directories[i], command);
 
         if (access(command_path, X_OK) == 0)
             return (command_path);
