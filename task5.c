@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include<unistd.h>
 
 /**
  * print_environment - Prints the current environment

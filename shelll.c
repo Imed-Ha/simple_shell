@@ -1,91 +1,74 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
-#include<sys/types.h>
-#include<sys/wait.h>
 
 #define BUFFER_SIZE 1024
-void execute_command(char *command);
-void handle_error(const char *message);
 
 /**
- * main - Simple UNIX command line interpreter
+ * read_command - Read a command from the user.
  *
- * Return: Always 0
+ * Returns:
+ *   (char *) The command entered by the user.
  */
-int main(void)
+char *read_command(void)
 {
-char *buffer;
-ssize_t read_bytes;
-size_t buffer_size = BUFFER_SIZE;
+        char *buffer = NULL;
+        size_t bufsize = 0;
 
-buffer = malloc(sizeof(char) * buffer_size);
-if (buffer == NULL)
-{
-handle_error("malloc error");
-}
+        printf("$ "); /* Display the prompt */
 
-while (1)
-{
-printf("#cisfun$ ");
-read_bytes = getline(&buffer, &buffer_size, stdin);
+        if (getline(&buffer, &bufsize, stdin) == -1)
+        {
+                if (feof(stdin))
+                {
+                        printf("\n");
+                        exit(EXIT_SUCCESS); /* Handle end of file (Ctrl+D) */
+                }
+                else
+                {
+                        perror("Error reading command");
+                        exit(EXIT_FAILURE);
+                }
+        }
 
-if (read_bytes == -1)
-{
-if (feof(stdin))
-{
-printf("\n");
-break;
-}
-else
-{
-handle_error("getline error");
-}
-}
-else
-{
-buffer[read_bytes - 1] = '\0'; /* Remove the trailing newline character */
-execute_command(buffer);
-}
-}
-
-free(buffer);
-return (0);
+        buffer[strcspn(buffer, "\n")] = '\0'; /* Remove the newline character */
+        return buffer;
 }
 
 /**
- * execute_command - Executes a command using fork and execve
- * @command: The command to execute
+ * execute_command - Execute a command.
+ * @command: The command to execute.
+ *
+ * Returns:
+ *   (void) None.
  */
 void execute_command(char *command)
 {
-pid_t pid = fork();
-
-if (pid == -1)
-{
-handle_error("fork error");
-}
-else if (pid == 0)
-{
-if (execve(command, (char *const *)NULL, (char *const *)NULL) == -1)
-{
-perror("execve error");
-exit(EXIT_FAILURE);
-}
-}
-else
-{
-wait(NULL);
-}
+        if (execve(command, NULL, NULL) == -1)
+        {
+                perror("Command execution error");
+                exit(EXIT_FAILURE);
+        }
 }
 
 /**
- * handle_error - Prints an error message and exits with failure status
- * @message: The error message to display
+ * main - Entry point of the program.
+ *
+ * Returns:
+ *   (int) 0 on success.
  */
-void handle_error(const char *message)
+int main(void)
 {
-perror(message);
-exit(EXIT_FAILURE);
+        char *command;
+
+        while (1)
+        {
+                command = read_command();
+                execute_command(command);
+                free(command);
+        }
+
+        return (0);
 }
 
