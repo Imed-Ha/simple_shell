@@ -18,8 +18,17 @@ def print_alias(alias_names):
 def set_alias(alias_name, alias_value):
     aliases[alias_name] = alias_value
 
+last_exit_code = 0
 # Function to parse user input
 def parse_input(command):
+    # Strip any leading or trailing whitespace from the command
+    command = command.strip()
+    # Check if the command is a comment (starts with '#')
+    if command.startswith('#'):
+        return
+    # Execute the command if it is not a comment
+    execute_command(command)
+            
     if command.startswith("alias"):
         parts = command.split()
         if len(parts) == 1:
@@ -36,6 +45,19 @@ def parse_input(command):
         exit()
     else:
         os.system(command)
+    # Add the following code before executing the command
+    command = replace_variables(command)
+    execute_command(command)
+            
+def replace_variables(command):
+    # Replace $$ with process ID
+    command = command.replace('$$', str(os.getpid()))
+
+    # Replace $? with last exit code
+    command = command.replace('$?', str(last_exit_code))
+
+    return command
+
 
 # Main shell loop
 while True:
