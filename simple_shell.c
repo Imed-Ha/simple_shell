@@ -21,6 +21,14 @@ def set_alias(alias_name, alias_value):
 last_exit_code = 0
 # Function to parse user input
 def parse_input(command):
+    # Strip any leading or trailing whitespace from the command
+    command = command.strip()
+    # Check if the command is a comment (starts with '#')
+    if command.startswith('#'):
+        return
+    # Execute the command if it is not a comment
+    execute_command(command)
+            
     if command.startswith("alias"):
         parts = command.split()
         if len(parts) == 1:
