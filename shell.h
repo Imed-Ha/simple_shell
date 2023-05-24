@@ -13,7 +13,7 @@
 #include <limits.h>
 #include <fcntl.h>
 #include <errno.h>
-int main(void)
+int main(void);
 void execute_command(char **args);
 void handle_error(const char *message);
 void execute_command(char **args);
