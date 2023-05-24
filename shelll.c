@@ -1,73 +1,44 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <unistd.h>
+
 #define BUFFER_SIZE 1024
 
 /**
- * read_command - Read a command from the user.
+ * main - Entry point of the shell
  *
- * Returns:
- *   (char *) The command entered by the user.
- */
-char *read_command(void)
-{
-        char *buffer = NULL;
-        size_t bufsize = 0;
-
-        printf("$ "); /* Display the prompt */
-
-        if (getline(&buffer, &bufsize, stdin) == -1)
-        {
-                if (feof(stdin))
-                {
-                        printf("\n");
-                        exit(EXIT_SUCCESS); /* Handle end of file (Ctrl+D) */
-                }
-                else
-                {
-                        perror("Error reading command");
-                        exit(EXIT_FAILURE);
-                }
-        }
-
-        buffer[strcspn(buffer, "\n")] = '\0'; /* Remove the newline character */
-        return buffer;
-}
-
-/**
- * execute_command - Execute a command.
- * @command: The command to execute.
- *
- * Returns:
- *   (void) None.
- */
-void execute_command(char *command)
-{
-        if (execve(command, NULL, NULL) == -1)
-        {
-                perror("Command execution error");
-                exit(EXIT_FAILURE);
-        }
-}
-
-/**
- * main - Entry point of the program.
- *
- * Returns:
- *   (int) 0 on success.
+ * Return: (0) Always
  */
 int main(void)
 {
-        char *command;
+	char *command;
+	char buffer[BUFFER_SIZE];
+	ssize_t read_bytes;
 
-        while (1)
-        {
-                command = read_command();
-                execute_command(command);
-                free(command);
-        }
+	while (1)
+	{
+		printf("$ ");
+		read_bytes = read(STDIN_FILENO, buffer, BUFFER_SIZE);
+		if (read_bytes == -1)
+		{
+			perror("read");
+			exit(EXIT_FAILURE);
+		}
+		if (read_bytes == 0)
+		{
+			printf("\n");
+			break;
+		}
 
-        return (0);
+		buffer[read_bytes - 1] = '\0'; /* Remove newline character */
+		command = buffer;
+		if (execve(command, &command, NULL) == -1)
+		{
+			perror("execve");
+			printf("Command not found: %s\n", command);
+		}
+	}
+
+	return (0);
 }
 
