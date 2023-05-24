@@ -173,7 +173,7 @@ int print_d(int, int);
 char *convert_number(long int, int, int);
 void remove_comments(char *);
 
-/* toem_builtin.c */
+/* toem task2.c */
 int _myexit(information_t *);
 int _mycd(information_t *);
 int _myhelp(information_t *);
