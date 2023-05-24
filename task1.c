@@ -5,7 +5,7 @@
  * @information: Structure containing potential arguments. Used to maintain
  * constant function prototype.
  * Return: exits with a given exit status
- * (0) if information.argv[0] != "exit"
+ * (0) if info.argv[0] != "exit"
  */
 int _myexit(information_t *information)
 {
@@ -37,32 +37,32 @@ int _myexit(information_t *information)
  */
 int _mycd(information_t *information)
 {
-	char *st, *z, buffer[1024];
+	char *s, *dir, buffer[1024];
 	int chdir_ret;
 
-	st = getcwd(buffer, 1024);
-	if (!st)
+	s = getcwd(buffer, 1024);
+	if (!s)
 		_puts("TODO: >>getcwd failure emsg here<<\n");
 	if (!information->argv[1])
 	{
-		z = _getenv(information, "HOME=");
-		if (!z)
+		dir = _getenv(information, "HOME=");
+		if (!dir)
 			chdir_ret = /* TODO: what should this be? */
-				chdir((z = _getenv(information, "PWD=")) ? z : "/");
+				chdir((dir = _getenv(information, "PWD=")) ? dir : "/");
 		else
-			chdir_ret = chdir(z);
+			chdir_ret = chdir(dir);
 	}
 	else if (_strcmp(information->argv[1], "-") == 0)
 	{
 		if (!_getenv(information, "OLDPWD="))
 		{
-			_puts(st);
+			_puts(s);
 			_putchar('\n');
 			return (1);
 		}
 		_puts(_getenv(information, "OLDPWD=")), _putchar('\n');
 		chdir_ret = /* TODO: what should this be? */
-			chdir((z = _getenv(information, "OLDPWD=")) ? z : "/");
+			chdir((dir = _getenv(information, "OLDPWD=")) ? dir : "/");
 	}
 	else
 		chdir_ret = chdir(information->argv[1]);
