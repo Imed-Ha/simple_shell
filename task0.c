@@ -2,38 +2,38 @@
 
 /**
  * interactive - returns true if shell is interactive mode
- * @info: struct address
+ * @information: struct address
  *
- * Return: 1 if interactive mode, 0 otherwise
+ * Return: (1) perfect, (0) otherwise
  */
-int interactive(info_t *info)
+int interactive(information_t *information)
 {
-	return (isatty(STDIN_FILENO) && info->readfd <= 2);
+	return (isatty(STDIN_FILENO) && information->readfd <= 2);
 }
 
 /**
- * is_delim - checks if character is a delimeter
- * @c: the char to check
- * @delim: the delimeter string
- * Return: 1 if true, 0 if false
+ * is_D - checks if character is a delimeter
+ * @x: the char to check
+ * @D: the delimeter string
+ * Return: (1) perfect, (0) if false
  */
-int is_delim(char c, char *delim)
+int is_D(char x, char *D)
 {
-	while (*delim)
-		if (*delim++ == c)
+	while (*D)
+		if (*D++ == x)
 			return (1);
 	return (0);
 }
 
 /**
  * _isalpha - checks for alphabetic character
- * @c: The character to input
- * Return: 1 if c is alphabetic, 0 otherwise
+ * @x: The character to input
+ * Return: (1) if x is alphabetic, (0) otherwise
  */
 
-int _isalpha(int c)
+int _isalpha(int x)
 {
-	if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
+	if ((x >= 'a' && x <= 'z') || (x >= 'A' && x <= 'Z'))
 		return (1);
 	else
 		return (0);
@@ -41,25 +41,25 @@ int _isalpha(int c)
 
 /**
  * _atoi - converts a string to an integer
- * @s: the string to be converted
- * Return: 0 if no numbers in string, converted number otherwise
+ * @st: the string to be converted
+ * Return: (0) if no numbers in string, converted number otherwise
  */
 
-int _atoi(char *s)
+int _atoi(char *st)
 {
 	int i, sign = 1, flag = 0, output;
 	unsigned int result = 0;
 
-	for (i = 0; s[i] != '\0' && flag != 2; i++)
+	for (i = 0; st[i] != '\0' && flag != 2; i++)
 	{
-		if (s[i] == '-')
+		if (st[i] == '-')
 			sign *= -1;
 
-		if (s[i] >= '0' && s[i] <= '9')
+		if (st[i] >= '0' && st[i] <= '9')
 		{
 			flag = 1;
 			result *= 10;
-			result += (s[i] - '0');
+			result += (st[i] - '0');
 		}
 		else if (flag == 1)
 			flag = 2;
