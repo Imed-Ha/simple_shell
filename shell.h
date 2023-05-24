@@ -13,6 +13,10 @@
 #include <limits.h>
 #include <fcntl.h>
 #include <errno.h>
+/**
+ * main - Entry point of the program
+ * Return: 0 on success
+ */
 int main(void);
 void execute_command(char **args);
 void handle_error(const char *message);
